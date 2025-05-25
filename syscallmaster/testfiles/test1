@@ -1,0 +1,1 @@
+0	AUE_NULL	ALL	{ int nosys(void); }   { indirect syscall }
