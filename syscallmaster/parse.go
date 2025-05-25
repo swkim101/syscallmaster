@@ -112,8 +112,13 @@ func doParse(s *state) []ParserResult {
 			w := string(s.text[start:end])
 			if s.sem == DECL {
 				row.Decl = w
-				row.Name = strings.Split(strings.Fields(w)[2], "(")[0]
+				fn := strings.Split(strings.Fields(w)[2], "(")[0]
+				fn = strings.ReplaceAll(fn, "*", "")
+				row.Name = fn
 				s.sem = COMMENTS
+				if s.pos == s.len {
+					break
+				}
 				continue
 			} else {
 				row.Comments = w

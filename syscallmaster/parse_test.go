@@ -67,6 +67,48 @@ func TestObsol(t *testing.T) {
 	}
 }
 
+var mmapdecl = `{
+		void *mmap(
+		    _In_ void *addr,
+		    size_t len,
+		    int prot,
+		    int flags,
+		    int fd,
+		    int pad,
+		    off_t pos
+		);
+	}`
+
+func TestPointer(t *testing.T) {
+	path := "testfiles/pointer"
+	dat, err := os.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+	res := syscallmaster.Parse(dat, path)
+	if len(res) != 1 {
+		t.Fail()
+	}
+	if res[0].Number != 197 {
+		t.Errorf("expect %v got %v", 197, res[0].Number)
+	}
+	if res[0].Audit != "AUE_MMAP" {
+		t.Errorf("expect %v got %v", "AUE_MMAP", res[0].Audit)
+	}
+	if res[0].Files != "COMPAT6|CAPENABLED" {
+		t.Errorf("expect %v got %v", "COMPAT6|CAPENABLED", res[0].Files)
+	}
+	if res[0].Decl != mmapdecl {
+		t.Errorf("expect %v got %v", mmapdecl, res[0].Decl)
+	}
+	if res[0].Name != "mmap" {
+		t.Errorf("expect %v got %v", "mmap", res[0].Name)
+	}
+	if res[0].Comments != "" {
+		t.Errorf("expect %v got %v", "", res[0].Comments)
+	}
+}
+
 func TestFreeBSD(t *testing.T) {
 	path := "testfiles/syscalls.master.freebsd"
 	dat, err := os.ReadFile(path)
