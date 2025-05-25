@@ -103,11 +103,11 @@ func doParse(s *state) []ParserResult {
 			if s.sem == DECL {
 				row.Decl = w
 				s.sem = COMMENTS
+				continue
 			} else {
 				row.Comments = w
 				s.sem = NUMBER
 			}
-			continue
 		default:
 			fail(*s, fmt.Errorf("??"))
 		}
@@ -138,7 +138,7 @@ func doParse(s *state) []ParserResult {
 				Audit:    row.Audit,
 				Files:    row.Files,
 				Decl:     row.Decl,
-				Comments: row.Decl,
+				Comments: row.Comments,
 			}
 			ret = append(ret, *row)
 		}
@@ -187,6 +187,9 @@ func isNumber(b byte) bool {
 }
 
 func (s *state) skipSpace() error {
+	if s.len == s.pos {
+		return io.EOF
+	}
 	for !isPrintable(s.peek()) {
 		_, err := s.pop()
 		if err != nil {
@@ -205,6 +208,9 @@ func fail(s state, err error) {
 		end += 1
 	}
 	fmt.Printf("%s", s.text[start:end])
+	if s.text[end-1] != '\n' {
+		fmt.Println("")
+	}
 	for range errpos {
 		fmt.Print("~")
 	}
