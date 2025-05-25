@@ -37,6 +37,36 @@ func TestTest1(t *testing.T) {
 	}
 }
 
+func TestObsol(t *testing.T) {
+	path := "testfiles/obsol"
+	dat, err := os.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+	res := syscallmaster.Parse(dat, path)
+	if len(res) != 1 {
+		t.Fail()
+	}
+	if res[0].Number != 11 {
+		t.Errorf("expect %v got %v", 11, res[0].Number)
+	}
+	if res[0].Audit != "AUE_NULL" {
+		t.Errorf("expect %v got %v", "AUE_NULL", res[0].Audit)
+	}
+	if res[0].Files != "OBSOL" {
+		t.Errorf("expect %v got %v", "OBSOL", res[0].Files)
+	}
+	if res[0].Decl != "execv" {
+		t.Errorf("expect %v got %v", "execv", res[0].Decl)
+	}
+	if res[0].Name != "execv" {
+		t.Errorf("expect %v got %v", "execv", res[0].Name)
+	}
+	if res[0].Comments != "" {
+		t.Errorf("expect %v got %v", "", res[0].Comments)
+	}
+}
+
 func TestFreeBSD(t *testing.T) {
 	path := "testfiles/syscalls.master.freebsd"
 	dat, err := os.ReadFile(path)

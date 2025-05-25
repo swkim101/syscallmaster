@@ -89,8 +89,17 @@ func doParse(s *state) []ParserResult {
 				row.Files = w
 				s.sem = DECL
 			}
+			if w == "RESERVED" {
+				break
+			}
 			continue
 		case DECL:
+			/* OBSOL may not startwith '{' */
+			if s.peek() != '{' {
+				row.Decl = s.word()
+				row.Name = row.Decl
+				break
+			}
 			fallthrough
 		case COMMENTS:
 			if s.peek() != '{' {
@@ -194,9 +203,9 @@ func (s *state) skipSpace() error {
 		return io.EOF
 	}
 	for !isPrintable(s.peek()) {
-		_, err := s.pop()
-		if err != nil {
-			return err
+		s.pop()
+		if s.len == s.pos {
+			return io.EOF
 		}
 	}
 	return nil
