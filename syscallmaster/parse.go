@@ -12,6 +12,7 @@ type ParserResult struct {
 	Audit    string
 	Files    string
 	Decl     string
+	Name     string
 	Comments string
 }
 
@@ -102,6 +103,7 @@ func doParse(s *state) []ParserResult {
 			w := string(s.text[start:end])
 			if s.sem == DECL {
 				row.Decl = w
+				row.Name = strings.Split(strings.Fields(w)[2], "(")[0]
 				s.sem = COMMENTS
 				continue
 			} else {
@@ -138,6 +140,7 @@ func doParse(s *state) []ParserResult {
 				Audit:    row.Audit,
 				Files:    row.Files,
 				Decl:     row.Decl,
+				Name:     row.Name,
 				Comments: row.Comments,
 			}
 			ret = append(ret, *row)

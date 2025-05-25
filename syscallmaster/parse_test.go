@@ -29,6 +29,9 @@ func TestTest1(t *testing.T) {
 	if res[0].Decl != "{ int nosys(void); }" {
 		t.Errorf("expect %v got %v", "{ int nosys(void); }", res[0].Decl)
 	}
+	if res[0].Name != "nosys" {
+		t.Errorf("expect %v got %v", "nosys", res[0].Name)
+	}
 	if res[0].Comments != "{ indirect syscall }" {
 		t.Errorf("expect %v got %v", "{ indirect syscall }", res[0].Comments)
 	}
