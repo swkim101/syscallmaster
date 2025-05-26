@@ -32,6 +32,12 @@ func TestTest1(t *testing.T) {
 	if res[0].Name != "nosys" {
 		t.Errorf("expect %v got %v", "nosys", res[0].Name)
 	}
+	if len(res[0].Args) != 1 {
+		t.Errorf("failed to parse args")
+	}
+	if res[0].Args[0] != "void" {
+		t.Errorf("expect %v got %v", "void", res[0].Args[0])
+	}
 	if res[0].Comments != "{ indirect syscall }" {
 		t.Errorf("expect %v got %v", "{ indirect syscall }", res[0].Comments)
 	}
@@ -61,6 +67,9 @@ func TestObsol(t *testing.T) {
 	}
 	if res[0].Name != "execv" {
 		t.Errorf("expect %v got %v", "execv", res[0].Name)
+	}
+	if len(res[0].Args) != 0 {
+		t.Errorf("failed to parse args")
 	}
 	if res[0].Comments != "" {
 		t.Errorf("expect %v got %v", "", res[0].Comments)
@@ -97,6 +106,15 @@ func TestPointer(t *testing.T) {
 	}
 	if res[0].Files != "COMPAT6|CAPENABLED" {
 		t.Errorf("expect %v got %v", "COMPAT6|CAPENABLED", res[0].Files)
+	}
+	if len(res[0].Args) != 7 {
+		t.Errorf("failed to parse args")
+	}
+	if res[0].Args[0] != "_In_ void *addr" {
+		t.Errorf("expect %v got %v", "_In_ void *addr", res[0].Args[0])
+	}
+	if res[0].Args[4] != "int fd" {
+		t.Errorf("expect %v got %v", "int fd", res[0].Args[4])
 	}
 	if res[0].Decl != mmapdecl {
 		t.Errorf("expect %v got %v", mmapdecl, res[0].Decl)

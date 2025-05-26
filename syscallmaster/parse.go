@@ -13,6 +13,7 @@ type ParserResult struct {
 	Files    string
 	Decl     string
 	Name     string
+	Args     []string
 	Comments string
 }
 
@@ -115,6 +116,13 @@ func doParse(s *state) []ParserResult {
 				fn := strings.Split(strings.Fields(w)[2], "(")[0]
 				fn = strings.ReplaceAll(fn, "*", "")
 				row.Name = fn
+				args := strings.Split(w, "(")[1]
+				args = strings.Split(args, ")")[0]
+				row.Args = strings.Split(args, ",")
+				for i := range row.Args {
+					row.Args[i] = strings.TrimSpace(row.Args[i])
+				}
+				// fail(*s, fmt.Errorf("%#v", row.Args))
 				s.sem = COMMENTS
 				if s.pos == s.len {
 					break
@@ -155,6 +163,7 @@ func doParse(s *state) []ParserResult {
 				Files:    row.Files,
 				Decl:     row.Decl,
 				Name:     row.Name,
+				Args:     row.Args,
 				Comments: row.Comments,
 			}
 			ret = append(ret, *row)
